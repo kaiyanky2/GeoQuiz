@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">GeoQuiz</string>
+
+    <string name="q1">Beijing is the largest city in China.</string>
+    <string name="q2">The Pacific Ocean is the larger than the Atlantic Ocean.</string>
+    <string name="q3">The Suez Canal connects the red Sea and the India ocean.</string>
+    <string name="q4">The source of the Nile River is in Egypt.</string>
+    <string name="q5">Lake Baikal is the world\'s oldest and deepest fraeshwater lake.</string>
+
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+
+    <string name="true_toast">True!</string>
+    <string name="false_toast">False!</string>
+
+    <string name="next_button">Next</string>
+
+</resources>
