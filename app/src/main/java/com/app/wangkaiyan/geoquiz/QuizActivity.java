@@ -11,6 +11,7 @@ import android.widget.Toast;
 public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
 
     private TextView mQuestionTextView;
     private Button mTrueButton;
@@ -40,6 +41,9 @@ public class QuizActivity extends AppCompatActivity {
 
         //引用组件
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        if (savedInstanceState != null){
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
         updateQuestion();
 
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +58,6 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(QuizActivity.this, R.string.true_toast, Toast.LENGTH_SHORT).show();
                 checkAnswer(true);
             }
         });
@@ -63,7 +66,6 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(QuizActivity.this, R.string.false_toast, Toast.LENGTH_SHORT).show();
                 checkAnswer(false);
             }
         });
@@ -76,6 +78,14 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d(TAG, "onSaveInstanceState");
+        //存储mCurrentIndex以便重新创建Activity后显示旋转前的题目
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
     //更新问题
@@ -129,5 +139,11 @@ public class QuizActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onReatart() called");
     }
 }
