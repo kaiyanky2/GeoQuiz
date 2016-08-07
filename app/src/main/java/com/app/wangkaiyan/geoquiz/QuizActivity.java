@@ -1,5 +1,6 @@
 package com.app.wangkaiyan.geoquiz;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     private TextView mQuestionTextView;
     private Button mTrueButton;
@@ -31,11 +33,12 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
+    private boolean mIsCheater;//保存CheatActivity中回传的值
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        Log.d(TAG, "onCreate called");
 
         //引用组件
         mTrueButton = (Button) findViewById(R.id.true_button);
@@ -81,7 +84,8 @@ public class QuizActivity extends AppCompatActivity {
 //                Intent i = new Intent(QuizActivity.this, CheatActivity.class);
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
                 Intent i = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
-                startActivity(i);
+//                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE_CHEAT);
             }
         });
 
@@ -102,6 +106,20 @@ public class QuizActivity extends AppCompatActivity {
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+
+        if(requestCode == REQUEST_CODE_CHEAT){
+            if(data == null){
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
+
     //更新问题
     private void updateQuestion(){
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -113,16 +131,20 @@ public class QuizActivity extends AppCompatActivity {
         //正确答案
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
-        int messageId = 0;
+        int messageResId = 0;
 
-        if(userPressedTrue == answerIsTrue){
-            messageId = R.string.true_toast;
+        if(mIsCheater){
+            messageResId = R.string.judgement_toast;
         }else{
-            messageId = R.string.false_toast;
+            if(userPressedTrue == answerIsTrue){
+                messageResId = R.string.true_toast;
+            }else{
+                messageResId = R.string.false_toast;
+            }
         }
 
-        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
-        System.out.println(this);
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
+
 
 }

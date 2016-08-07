@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class CheatActivity extends AppCompatActivity {
 
     private static final String EXTRA_ANSWER_IS_TRUE = "com.app.wangkaiyan.geoquiz.answer_is_true";
+    private static final String EXTRA_ANSWER_SHOWN = "com.app.wangkaiyan.geoquiz.answer_shown";
 
     private boolean mAnswerIsTrue;
 
@@ -33,6 +34,7 @@ public class CheatActivity extends AppCompatActivity {
                 }else{
                     mAnswerTextView.setText(R.string.false_button);
                 }
+                setAnswerShownResult(true);
             }
         });
     }
@@ -41,5 +43,17 @@ public class CheatActivity extends AppCompatActivity {
         Intent i = new Intent(packageContext, CheatActivity.class);
         i.putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue);
         return i;
+    }
+
+    //将返回给QuizActivity的结果代码以及intent打包
+    private void setAnswerShownResult(boolean isAnswerShown){
+        Intent data = new Intent();
+        data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        setResult(RESULT_OK, data);
+    }
+
+    //解析QuizActivity中能用的信息
+    public static boolean wasAnswerShown(Intent result){
+        return result.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
     }
 }
